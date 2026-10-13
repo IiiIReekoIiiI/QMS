@@ -45,6 +45,15 @@ Entities with complex lifecycles MUST implement an explicit state machine in the
 
 The system MUST detect when a QMS record has changed since a user loaded it and MUST prevent silent overwrites. Conflicting updates MUST be rejected; the user MUST be informed of the conflict and given access to the current record before retrying.
 
+### Controlled Documents: Operational State Separation
+
+Controlled documents and operational forms MUST maintain a strict, explicit separation between their approval status and their operational effectiveness to protect 24/7/365 maritime maneuvers. 
+
+1. **Approval State (`Approved`):** The action where the Quality Leader or compliance authority verifies and freezes the document content. This action MUST NOT automatically activate the document in daily operations.
+2. **Effectiveness State (`Effective`):** The explicit, separate action or verified scheduled deployment date where the approved document is officially made visible and mandatory for crews and vessels. 
+
+The system PROHIBITS an approved document from automatically superseding an active version until the explicit effectiveness trigger occurs. Superseded versions MUST remain identifiable and transition to an inactive state precisely at the millisecond the new version becomes effective, ensuring zero operational disruption or data confusion during live maritime operations.
+
 ### IV. Security and Access Control
 
 Every endpoint and use case MUST enforce role-based authorization for specific roles, such as Auditor, Quality Leader, and Contributor, following least privilege.
@@ -52,8 +61,6 @@ Every endpoint and use case MUST enforce role-based authorization for specific r
 Authentication MUST use asymmetrically signed JWTs expiring within 15 minutes, paired with secure refresh tokens stored in `HttpOnly` and `Secure` cookies. Refresh tokens MUST be rotated after each successful use, and the previously used token MUST be invalidated. Reuse of an invalidated refresh token MUST revoke its token family and require reauthentication. The mechanism used to track token families MUST be documented in approved architecture guidance. Access-token invalidation on logout and concurrent-session handling MUST be defined in approved architecture guidance.
 
 Uploaded files, including PDFs, manuals, and audit evidence, MUST be encrypted at rest using AES-256-GCM in the Infrastructure layer before persistence. All network connections between clients, application services, and storage containing QMS data MUST use TLS with certificate validation; production interfaces MUST NOT accept plaintext connections. Encryption keys MUST be managed by an approved key-management service, stored separately from encrypted files, access-controlled, and rotatable. Application configuration MAY identify or grant access to the key-management service but MUST NOT store key material.
-
-Formal approval workflows under ISO 7.5.3 MUST generate a SHA-256 hash from the document content, approver ID, and UTC approval timestamp using a versioned, deterministic representation of those inputs. The representation version and hash algorithm MUST be recorded so the approval payload can be reconstructed. The system MUST sign the hash using a protected private key and an approved digital-signature algorithm. The signature, algorithm identifier, and signing-key identifier MUST be stored immutably with the audit record. Signing keys MUST be rotatable, and historical signatures MUST remain verifiable using the corresponding retained verification keys.
 
 The system MUST define and enforce a data classification scheme (for example: Public, Internal, Confidential, Restricted). Every QMS record type MUST be assigned a classification. Handling rules for storage, transmission, logging, export, and disposal MUST be defined per classification and documented in approved architecture guidance. Rules that reference "secrets" or "sensitive data" elsewhere in this constitution MUST be interpreted using this classification scheme.
 
