@@ -1,11 +1,13 @@
 {
   "name": "qms",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "ISO9001 QMS Maritime Web Service",
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "dev": "tsx watch --import=dotenv/config src/index.ts",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IiiIReekoIiiI/QMS.git"
@@ -13,12 +15,21 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/IiiIReekoIiiI/QMS/issues"
   },
   "homepage": "https://github.com/IiiIReekoIiiI/QMS#readme",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  },
   "devDependencies": {
-    "typescript": "^7.0.2"
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "@types/pg": "^8.11.4",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.4.5"
   }
 }
